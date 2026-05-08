@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAllTags, getPublishedNotes, getTagSlug } from "../../utils/notes";
+
+const notes = await getPublishedNotes();
+const tags = getAllTags(notes);
+---
+
+<BaseLayout title="Tags | LiuJrX-Space" description="所有公开笔记的标签索引。">
+  <section class="container shell page-intro page-fade-in">
+    <p class="eyebrow">Tags</p>
+    <h1>标签索引</h1>
+    <p class="lead">🏷 按主题阅读笔记</p>
+  </section>
+
+  <section class="container shell tag-cloud dense-tags stagger-grid">
+    {tags.map((tag, index) => (
+      <div class="stagger-item" style={`--stagger-index: ${index};`}>
+        <a class="tag-badge large-tag" href={`/tags/${getTagSlug(tag)}/`}>{tag}</a>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

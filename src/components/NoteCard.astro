@@ -1,0 +1,29 @@
+---
+import TagBadge from "./TagBadge.astro";
+import { getNotePathSlug, type NoteEntry } from "../utils/notes";
+
+interface Props {
+  note: NoteEntry;
+}
+
+const { note } = Astro.props;
+---
+
+<article class="card note-card">
+  <div class="card-topline">
+    <time datetime={note.data.updatedDate.toISOString()}>
+      {note.data.updatedDate.toLocaleDateString("zh-CN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      })}
+    </time>
+  </div>
+  <h3 class="card-title">
+    <a href={`/notes/${getNotePathSlug(note)}/`}>{note.data.title}</a>
+  </h3>
+  <p class="card-summary">{note.data.summary}</p>
+  <div class="tag-row">
+    {note.data.tags.map((tag) => <TagBadge tag={tag} />)}
+  </div>
+</article>

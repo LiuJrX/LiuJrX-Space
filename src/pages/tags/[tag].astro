@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NoteCard from "../../components/NoteCard.astro";
+import { getAllTags, getPublishedNotes, getTagSlug } from "../../utils/notes";
+
+export async function getStaticPaths() {
+  const notes = await getPublishedNotes();
+  return getAllTags(notes).map((tag) => ({
+    params: { tag: getTagSlug(tag) },
+    props: { tag }
+  }));
+}
+
+const notes = await getPublishedNotes();
+const { tag } = Astro.props;
+const filtered = notes.filter((note) => note.data.tags.includes(tag ?? ""));
+---
+
+<BaseLayout title={`${tag} | Tags | LiuJrX-Space`} description={`所有与 ${tag} 相关的公开笔记。`}>
+  <section class="container shell page-intro page-fade-in">
+    <p class="eyebrow">Tag</p>
+    <h1>{tag}</h1>
+    <p class="lead">共 {filtered.length} 篇公开笔记。</p>
+  </section>
+
+  <section class="container shell list-grid stagger-grid">
+    {filtered.map((note, index) => (
+      <div class="stagger-item" style={`--stagger-index: ${index};`}>
+        <NoteCard note={note} />
+      </div>
+    ))}
+  </section>
+
+  <div class="note-fab" aria-label="标签快捷操作">
+    <div class="note-fab-actions">
+      <a class="note-fab-action" href="/tags">
+        <span class="note-fab-action-label">返回全部标签</span>
+        <span class="note-fab-action-icon" aria-hidden="true">↩</span>
+      </a>
+    </div>
+    <button class="note-fab-trigger" type="button" aria-label="展开快捷操作">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</BaseLayout>

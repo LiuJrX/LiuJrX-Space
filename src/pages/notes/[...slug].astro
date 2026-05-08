@@ -1,0 +1,22 @@
+---
+import { getCollection } from "astro:content";
+import NoteLayout from "../../layouts/NoteLayout.astro";
+import { getAdjacentNotes, getNotePathSlug, getPublishedNotes } from "../../utils/notes";
+
+export async function getStaticPaths() {
+  const notes = await getCollection("notes", ({ data }) => data.publish);
+  return notes.map((note) => ({
+    params: { slug: getNotePathSlug(note) },
+    props: { note }
+  }));
+}
+
+const { note } = Astro.props;
+const { Content, headings } = await note.render();
+const allNotes = await getPublishedNotes();
+const { previous, next } = getAdjacentNotes(allNotes, note.slug);
+---
+
+<NoteLayout note={note} headings={headings} previous={previous} next={next}>
+  <Content />
+</NoteLayout>

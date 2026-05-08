@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { projects } from "../../data/projects";
+
+const sortedProjects = [...projects].sort(
+  (a, b) => (a.order ?? 999) - (b.order ?? 999)
+);
+---
+
+<BaseLayout title="Projects | LiuJrX-Space" description="精选 GitHub 项目与实验集合。">
+  <section class="container shell page-intro page-fade-in">
+    <p class="eyebrow">Projects</p>
+    <h1>精选项目</h1>
+    <p class="lead">
+      这里只展示我希望长期维护和持续讲述的项目，而不是全部仓库列表。
+    </p>
+  </section>
+
+  <section class="container shell card-grid stagger-grid">
+    {sortedProjects.map((project, index) => (
+      <div class="stagger-item" style={`--stagger-index: ${index};`}>
+        <ProjectCard project={project} />
+      </div>
+    ))}
+  </section>
+</BaseLayout>

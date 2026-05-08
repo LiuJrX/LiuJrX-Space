@@ -1,0 +1,11 @@
+---
+import { getTagSlug } from "../utils/notes";
+
+interface Props {
+  tag: string;
+}
+
+const { tag } = Astro.props;
+---
+
+<a class="tag-badge" href={`/tags/${getTagSlug(tag)}/`}>{tag}</a>

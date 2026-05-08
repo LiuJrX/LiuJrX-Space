@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NoteCard from "../../components/NoteCard.astro";
+import { getPublishedNotes } from "../../utils/notes";
+
+const notes = await getPublishedNotes();
+---
+
+<BaseLayout title="Notes | LiuJrX-Space" description="按时间整理的公开笔记列表。">
+  <section class="container shell page-intro">
+    <p class="eyebrow">Notes</p>
+    <h1>公开笔记</h1>
+    <p class="lead">
+      这里收录从私有 Obsidian 工作流中筛选出的公开笔记 📒，按时间倒序发布。
+    </p>
+  </section>
+
+  <section class="container shell list-grid notes-fade-grid">
+    {notes.map((note, index) => (
+      <div class="notes-fade-item" style={`--stagger-index: ${index};`}>
+        <NoteCard note={note} />
+      </div>
+    ))}
+  </section>
+</BaseLayout>

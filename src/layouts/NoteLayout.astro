@@ -1,0 +1,166 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import TagBadge from "../components/TagBadge.astro";
+import { getNotePathSlug, type NoteEntry } from "../utils/notes";
+
+interface Props {
+  note: NoteEntry;
+  headings: { depth: number; slug: string; text: string }[];
+  previous?: NoteEntry;
+  next?: NoteEntry;
+}
+
+const { note, headings, previous, next } = Astro.props;
+---
+
+<BaseLayout title={`${note.data.title} | LiuJrX-Space`} description={note.data.summary}>
+  <section class="container shell note-hero note-hero-fade">
+    <p class="eyebrow">公开笔记</p>
+    <h1>{note.data.title}</h1>
+    <div class="note-summary" aria-label="摘要">
+      <p>{note.data.summary}</p>
+    </div>
+    <div class="meta-row">
+      <div class="note-date-pair">
+        <span class="note-date-item">
+          <span class="note-date-label">发布于</span>
+          <time datetime={note.data.pubDate.toISOString()}>
+            {note.data.pubDate.toLocaleDateString("zh-CN", {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            })}
+          </time>
+        </span>
+        <span class="note-date-item">
+          <span class="note-date-label">更新于</span>
+          <time datetime={note.data.updatedDate.toISOString()}>
+            {note.data.updatedDate.toLocaleDateString("zh-CN", {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            })}
+          </time>
+        </span>
+      </div>
+      <div class="tag-row note-tag-row">
+        {note.data.tags.map((tag) => <TagBadge tag={tag} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="container shell note-shell note-shell-fade">
+    <article class="prose prose-note prose-note-fade">
+      <slot />
+    </article>
+    <aside class="note-sidebar note-sidebar-fade">
+      <div class="toc-rail" aria-hidden="true">
+        {headings.map((heading) => (
+          <span class={`toc-rail-line depth-${heading.depth}`} data-heading-id={heading.slug}></span>
+        ))}
+      </div>
+      <nav class="toc-card toc-card-fade" aria-label="目录">
+        <p class="toc-title">目录</p>
+        <ul>
+          {headings.map((heading) => (
+            <li class={`depth-${heading.depth}`}>
+              <a href={`#${heading.slug}`} data-heading-link={heading.slug}>{heading.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  </section>
+
+  <div class="note-fab" aria-label="笔记快捷操作">
+    <div class="note-fab-actions">
+      <a class="note-fab-action" href="/notes">
+        <span class="note-fab-action-label">返回 Notes 主菜单</span>
+        <span class="note-fab-action-icon" aria-hidden="true">↩</span>
+      </a>
+    </div>
+    <button class="note-fab-trigger" type="button" aria-label="展开快捷操作">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <section class="container shell note-pager page-fade-in" style="--fade-delay: 220ms;">
+    <a class="pager-link" href="/notes">← 返回 Notes</a>
+    <div class="pager-links">
+      {previous && <a href={`/notes/${getNotePathSlug(previous)}/`}>上一篇：{previous.data.title}</a>}
+      {next && <a href={`/notes/${getNotePathSlug(next)}/`}>下一篇：{next.data.title}</a>}
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const links = Array.from(document.querySelectorAll("[data-heading-link]"));
+      const railLines = Array.from(document.querySelectorAll("[data-heading-id]"));
+      const sections = links
+        .map((link) => {
+          const id = link.getAttribute("data-heading-link");
+          if (!id) return null;
+          const target = document.getElementById(id);
+          if (!target) return null;
+          return { id, target };
+        })
+        .filter(Boolean);
+
+      if (!sections.length) return;
+
+      const setActive = (id) => {
+        links.forEach((link) => {
+          link.classList.toggle("is-active", link.getAttribute("data-heading-link") === id);
+        });
+
+        railLines.forEach((line) => {
+          line.classList.toggle("is-active", line.getAttribute("data-heading-id") === id);
+        });
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+          if (visible.length > 0) {
+            setActive(visible[0].target.id);
+          }
+        },
+        {
+          rootMargin: "-18% 0px -62% 0px",
+          threshold: [0, 1]
+        }
+      );
+
+      sections.forEach(({ target }) => observer.observe(target));
+      setActive(sections[0].id);
+
+      links.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const id = link.getAttribute("data-heading-link");
+          if (!id) return;
+          const target = document.getElementById(id);
+          if (!target) return;
+
+          event.preventDefault();
+
+          const targetTop = target.getBoundingClientRect().top + window.scrollY;
+          const viewportOffset = Math.max(window.innerHeight * 0.22, 120);
+          const top = Math.max(targetTop - viewportOffset, 0);
+
+          window.history.replaceState(null, "", `#${id}`);
+          window.scrollTo({
+            top,
+            behavior: "smooth"
+          });
+
+          setActive(id);
+        });
+      });
+    })();
+  </script>
+</BaseLayout>

@@ -1,0 +1,106 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NoteCard from "../components/NoteCard.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { projects } from "../data/projects";
+import { getPublishedNotes, getAllTags } from "../utils/notes";
+import { siteMeta } from "../utils/site";
+
+const notes = await getPublishedNotes();
+const featuredProjects = projects
+  .filter((project) => project.featured)
+  .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+  .slice(0, 3);
+const latestNotes = notes.slice(0, 3);
+const allTags = getAllTags(notes);
+const tags = allTags.slice(0, 8);
+---
+
+<BaseLayout title={`${siteMeta.title} | LiuJrX-Space`} description={siteMeta.description}>
+  <section class="container shell hero-section">
+    <div class="hero-copy">
+      <p class="eyebrow">个人空间</p>
+      <div class="hero-title-row">
+        <h1>{siteMeta.title}</h1>
+        <a
+          class="hero-github"
+          href="https://github.com/LiuJrX"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="GitHub"
+          title="GitHub"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56l-.02-2.16c-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.17 1.18a10.9 10.9 0 0 1 5.77 0c2.19-1.5 3.16-1.18 3.16-1.18.64 1.58.24 2.75.12 3.04.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.09.78 2.2l-.01 3.26c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"
+              fill="currentColor"
+            />
+          </svg>
+        </a>
+      </div>
+      <p class="hero-tagline">{siteMeta.tagline}</p>
+      <p class="lead">
+        我在这里整理公开笔记、长期项目和研究片段。内容来自私有 Obsidian 工作流，发布层保持克制、清晰、长期可维护。
+      </p>
+      <div class="hero-links">
+        <a class="button-primary" href="/projects">查看项目</a>
+        <a class="button-secondary" href="/notes">阅读笔记</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container shell section-block">
+    <div class="section-heading page-fade-in">
+      <p class="section-kicker">Featured Projects</p>
+      <span class="section-slash">/</span>
+      <h2>精选项目</h2>
+    </div>
+    <div class="preview-card-grid stagger-grid" style="--stagger-base: 120ms;">
+      {featuredProjects.map((project, index) => (
+        <div class="stagger-item" style={`--stagger-index: ${index};`}>
+          <ProjectCard project={project} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container shell section-block">
+    <div class="section-heading page-fade-in">
+      <div class="section-heading-main">
+        <p class="section-kicker">Latest Notes</p>
+        <span class="section-slash">/</span>
+        <h2>最近笔记</h2>
+        <a class="section-more-link section-inline-link" href="/notes">
+          查看全部 {notes.length} 篇笔记
+        </a>
+      </div>
+    </div>
+    <div class="preview-card-grid stagger-grid" style="--stagger-base: 120ms;">
+      {latestNotes.map((note, index) => (
+        <div class="stagger-item" style={`--stagger-index: ${index};`}>
+          <NoteCard note={note} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container shell section-block">
+    <div class="section-heading page-fade-in">
+      <div class="section-heading-main">
+        <p class="section-kicker">Topics</p>
+        <span class="section-slash">/</span>
+        <h2>按主题浏览</h2>
+        <a class="section-more-link section-inline-link" href="/tags">
+          查看全部 {allTags.length} 个主题
+        </a>
+      </div>
+    </div>
+    <div class="tag-cloud stagger-grid" style="--stagger-base: 120ms;">
+      {tags.map((tag, index) => (
+        <div class="stagger-item" style={`--stagger-index: ${index};`}>
+          <a class="tag-badge large-tag" href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
