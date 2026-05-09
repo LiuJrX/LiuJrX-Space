@@ -17,5 +17,13 @@ export const projects: Project[] = [
     tags: ["Astro", "Obsidian"],
     featured: true,
     order: 1
+  },
+  {
+    title: "AI Agents Code",
+    description: "一个模块化的 AI Agent 代码实验仓库，围绕 ReAct、记忆、工具调用、自反思与 Agent Loop 等核心概念做可运行实现与拆解。",
+    github: "https://github.com/LiuJrX/ai-agents-code",
+    tags: ["AI Agent", "Tools", "Memory", "Loop"],
+    featured: true,
+    order: 2
   }
 ];
