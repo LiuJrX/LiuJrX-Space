@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import NoteCard from "../components/NoteCard.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import { projects } from "../data/projects";
-import { getPublishedNotes, getAllTags } from "../utils/notes";
+import { getPublishedNotes, getAllTags, getTagSlug } from "../utils/notes";
 import { siteMeta } from "../utils/site";
 
 const notes = await getPublishedNotes();
@@ -98,7 +98,7 @@ const tags = allTags.slice(0, 8);
     <div class="tag-cloud stagger-grid" style="--stagger-base: 120ms;">
       {tags.map((tag, index) => (
         <div class="stagger-item" style={`--stagger-index: ${index};`}>
-          <a class="tag-badge large-tag" href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>
+          <a class="tag-badge large-tag" href={`/tags/${getTagSlug(tag)}/`}>{tag}</a>
         </div>
       ))}
     </div>
