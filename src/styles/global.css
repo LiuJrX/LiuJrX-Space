@@ -247,6 +247,10 @@ img {
   text-transform: uppercase;
 }
 
+.page-intro.prose-page > .eyebrow {
+  margin-bottom: 0.25rem;
+}
+
 h1,
 h2,
 h3 {
@@ -304,6 +308,12 @@ h3 {
   max-width: 88ch;
   color: var(--muted);
   font-size: 1.05rem;
+}
+
+.page-intro + .list-grid,
+.page-intro + .card-grid,
+.page-intro + .tag-cloud {
+  margin-top: 0.9rem;
 }
 
 .hero-copy .lead {
@@ -562,11 +572,11 @@ h3 {
   color: var(--muted);
   font-size: 0.9rem;
   transition:
-    transform 160ms ease,
-    color 160ms ease,
-    border-color 160ms ease,
-    background-color 160ms ease,
-    box-shadow 160ms ease;
+    transform 110ms ease,
+    color 110ms ease,
+    border-color 110ms ease,
+    background-color 110ms ease,
+    box-shadow 110ms ease;
 }
 
 .tag-badge:hover {
