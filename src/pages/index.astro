@@ -7,10 +7,9 @@ import { getPublishedNotes, getAllTags, getTagSlug } from "../utils/notes";
 import { siteMeta } from "../utils/site";
 
 const notes = await getPublishedNotes();
-const featuredProjects = projects
-  .filter((project) => project.featured)
-  .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
-  .slice(0, 3);
+const homepageProjects = [...projects].sort(
+  (a, b) => (a.order ?? 999) - (b.order ?? 999)
+);
 const latestNotes = notes.slice(0, 3);
 const allTags = getAllTags(notes);
 const tags = allTags.slice(0, 8);
@@ -56,7 +55,7 @@ const tags = allTags.slice(0, 8);
       <h2>精选项目</h2>
     </div>
     <div class="preview-card-grid stagger-grid" style="--stagger-base: 120ms;">
-      {featuredProjects.map((project, index) => (
+      {homepageProjects.map((project, index) => (
         <div class="stagger-item" style={`--stagger-index: ${index};`}>
           <ProjectCard project={project} />
         </div>
