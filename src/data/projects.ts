@@ -32,6 +32,6 @@ export const projects: Project[] = [
     github: "https://github.com/LiuJrX/ai-trading-harness",
     tags: ["Harness", "量化", "Trading"],
     featured: true,
-    order: 2
+    order: 3
   }
 ];
