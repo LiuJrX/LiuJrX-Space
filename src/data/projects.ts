@@ -33,5 +33,13 @@ export const projects: Project[] = [
     tags: ["Harness", "量化", "Trading"],
     featured: true,
     order: 3
+  },
+  {
+    title: "ai-job-assistant",
+    description: "AI 简历小助手，根据我的画像投递简历，并持续优化投递策略和简历内容",
+    github: "https://github.com/LiuJrX/ai-job-assistant",
+    tags: ["AI", "Job"],
+    featured: true,
+    order: 4
   }
 ];
