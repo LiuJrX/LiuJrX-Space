@@ -27,9 +27,9 @@ export const projects: Project[] = [
     order: 2
   },
   {
-    title: "Stock-Review-Harness",
+    title: "ai-trading-harness",
     description: "经验策略内核 + 数据/舆情感知 + 量化验证 + Harness 风控与审计的 Agent 系统",
-    github: "https://github.com/LiuJrX/stock-review-harness",
+    github: "https://github.com/LiuJrX/ai-trading-harness",
     tags: ["Harness", "量化", "Trading"],
     featured: true,
     order: 2
